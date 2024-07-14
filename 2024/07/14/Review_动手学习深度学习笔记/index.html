@@ -145,12 +145,41 @@
 </nav>
 
         <div id="main" >
-            <div class ="post_page_title_img" style="height: 25rem;background-image: url();background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >test</h2></a>
+            <div class ="post_page_title_img" style="height: 25rem;background-image: url(../../../../gallery/capybara2.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >Deep-learning知识简要回顾</h2></a>
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
-                
+                <h1 id="参考“李沐-动手学习深度学习”重新系统的回顾必要知识，顺手记录感悟"><a href="#参考“李沐-动手学习深度学习”重新系统的回顾必要知识，顺手记录感悟" class="headerlink" title="参考“李沐-动手学习深度学习”重新系统的回顾必要知识，顺手记录感悟"></a>参考<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_introduction/index.html">“李沐-动手学习深度学习”</a>重新系统的回顾必要知识，顺手记录感悟</h1><h1 id="一、机器学习与神经网络前言-2024-7-14更"><a href="#一、机器学习与神经网络前言-2024-7-14更" class="headerlink" title="一、机器学习与神经网络前言 (2024&#x2F;7&#x2F;14更)"></a>一、机器学习与神经网络前言 (2024&#x2F;7&#x2F;14更)</h1><p><strong>机器学习的核心组件：数据，模型，目标函数，算法</strong></p>
+<ul>
+<li>没有高质量的数据，深度学习将黯然失色（所以说数据就像对人的教育）</li>
+<li>深度学习倾向于end-to-end模型，模型就像做事的方法逻辑</li>
+<li>目标函数用于反馈和迭代，不然如何进步？做事要有一定的方向</li>
+<li>优化算法是实际执行的步骤代码，是开始行动的标志；高效的算法代表高效的行动，作用于数据-模型-函数之间。</li>
+</ul>
+<p><strong>看了一会发现这节看过了，简单再记一些平时做的少的部分。</strong></p>
+<ul>
+<li>监督学习：…，标记（多标签），搜索，推荐，序列…</li>
+<li>无监督学习：…，因果，概率图…</li>
+<li>强化学习：…</li>
+</ul>
+<h1 id="二、预备知识"><a href="#二、预备知识" class="headerlink" title="二、预备知识"></a>二、预备知识</h1><p><strong>这部分涉及数据处理和一些数学（向量，矩阵，微分…）回顾浏览一下并简要记录一些可能不熟悉的部分。当然也可以看看一些教程里的一些没用过的库和表达。</strong></p>
+<ol>
+<li><p>数据操作：这部分介绍了基础的张量操作，新手可以注意节省内存部分、广播部分、对象转换部分</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#以下操作导致id重新分配</span><br><span class="line">before = id(Y)</span><br><span class="line">Y = Y + X</span><br><span class="line">id(Y) == before</span><br><span class="line">#通过切片指向指定id</span><br><span class="line">before = id(X)</span><br><span class="line">X += Y</span><br><span class="line">id(X) == before</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>数据预处理：pandas（我还挺少用来着），对于处理大批量，高质量的源头数据要用到，可以用于处理缺失数据</p>
+</li>
+<li><p>线性代数： 矩阵&#x2F;张量操作；非降维求和（keepdims）；矩阵乘法与Hadamard积；范数…</p>
+</li>
+<li><p>微积分： （仿佛回到了高中），这部分要清楚导数，梯度，链式法则，有一说一太久不用我都不一定写的出来链式法则0.0</p>
+</li>
+<li><p>自动微分：这应该是基于梯度的优化最重要的部分了（但是对使用者并不需要严格掌握，大部分时间几乎不需要知道，但深入底层其实往往会自己autograd函数），大部分深度学习库的底层都是一个个计算图；对于高阶和高维的y和x，求导的结果可以是一个高阶张量；控制流的梯度计算允许梯度在各种结构中被计算</p>
+</li>
+<li><p>概率：真神降临！——概率是更古典的数学美学。概率将不确定的事情进行了确定的描述，概率和人性有一种关联，概率可以通往哲学。随机变量，最基础的概念，但实际上很容易搞错；贝叶斯定理，统计学中最有用的方程之一；边际概率；期望、（协）方差（也非常重要的概念）</p>
+</li>
+</ol>
+
             </div>
 
             <!-- Post Comments -->
@@ -212,8 +241,8 @@ $('.btn_click_load').click(function() {
 -->
 <script type="text/javascript">
     var disqus_config = function () {
-        this.page.url = 'http://cuiyi126.github.io/tag/index.html';  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'http://cuiyi126.github.io/tag/index.html'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = 'http://cuiyi126.github.io/2024/07/14/Review_%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://cuiyi126.github.io/2024/07/14/Review_%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
 </script>
 
