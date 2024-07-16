@@ -152,34 +152,109 @@
             <div class="typo" style="padding: 3rem;">
                 <h1 id="参考“李沐-动手学习深度学习”重新系统的回顾必要知识，顺手记录感悟"><a href="#参考“李沐-动手学习深度学习”重新系统的回顾必要知识，顺手记录感悟" class="headerlink" title="参考“李沐-动手学习深度学习”重新系统的回顾必要知识，顺手记录感悟"></a>参考<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_introduction/index.html">“李沐-动手学习深度学习”</a>重新系统的回顾必要知识，顺手记录感悟</h1><h1 id="一、机器学习与神经网络前言-2024-7-14更"><a href="#一、机器学习与神经网络前言-2024-7-14更" class="headerlink" title="一、机器学习与神经网络前言 (2024&#x2F;7&#x2F;14更)"></a>一、机器学习与神经网络前言 (2024&#x2F;7&#x2F;14更)</h1><p><strong>机器学习的核心组件：数据，模型，目标函数，算法</strong></p>
 <ul>
-<li>没有高质量的数据，深度学习将黯然失色（所以说数据就像对人的教育）</li>
-<li>深度学习倾向于end-to-end模型，模型就像做事的方法逻辑</li>
-<li>目标函数用于反馈和迭代，不然如何进步？做事要有一定的方向</li>
-<li>优化算法是实际执行的步骤代码，是开始行动的标志；高效的算法代表高效的行动，作用于数据-模型-函数之间。</li>
+<li>*没有高质量的数据，深度学习将黯然失色（所以说数据就像对人的教育）</li>
+<li>*深度学习倾向于end-to-end模型，模型就像做事的方法逻辑</li>
+<li>*目标函数用于反馈和迭代，不然如何进步？做事要有一定的方向</li>
+<li>*优化算法是实际执行的步骤代码，是开始行动的标志；高效的算法代表高效的行动，作用于数据-模型-函数之间。</li>
 </ul>
 <p><strong>看了一会发现这节看过了，简单再记一些平时做的少的部分。</strong></p>
 <ul>
-<li>监督学习：…，标记（多标签），搜索，推荐，序列…</li>
-<li>无监督学习：…，因果，概率图…</li>
-<li>强化学习：…</li>
+<li>*监督学习：…，标记（多标签），搜索，推荐，序列…</li>
+<li>*无监督学习：…，因果，概率图…</li>
+<li>*强化学习：…</li>
 </ul>
 <h1 id="二、预备知识"><a href="#二、预备知识" class="headerlink" title="二、预备知识"></a>二、预备知识</h1><p><strong>这部分涉及数据处理和一些数学（向量，矩阵，微分…）回顾浏览一下并简要记录一些可能不熟悉的部分。当然也可以看看一些教程里的一些没用过的库和表达。</strong></p>
 <ol>
-<li><p>数据操作：这部分介绍了基础的张量操作，新手可以注意节省内存部分、广播部分、对象转换部分</p>
+<li><p>1.数据操作：这部分介绍了基础的张量操作，新手可以注意节省内存部分、广播部分、对象转换部分</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#以下操作导致id重新分配</span><br><span class="line">before = id(Y)</span><br><span class="line">Y = Y + X</span><br><span class="line">id(Y) == before</span><br><span class="line">#通过切片指向指定id</span><br><span class="line">before = id(X)</span><br><span class="line">X += Y</span><br><span class="line">id(X) == before</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>数据预处理：pandas（我还挺少用来着），对于处理大批量，高质量的源头数据要用到，可以用于处理缺失数据</p>
+<li><p>2.数据预处理：pandas（我还挺少用来着），对于处理大批量，高质量的源头数据要用到，可以用于处理缺失数据</p>
 </li>
-<li><p>线性代数： 矩阵&#x2F;张量操作；非降维求和（keepdims）；矩阵乘法与Hadamard积；范数…</p>
+<li><p>3.线性代数： 矩阵&#x2F;张量操作；非降维求和（keepdims）；矩阵乘法与Hadamard积；范数…</p>
 </li>
-<li><p>微积分： （仿佛回到了高中），这部分要清楚导数，梯度，链式法则，有一说一太久不用我都不一定写的出来链式法则0.0</p>
+<li><p>4.微积分： （仿佛回到了高中），这部分要清楚导数，梯度，链式法则，有一说一太久不用我都不一定写的出来链式法则0.0</p>
 </li>
-<li><p>自动微分：这应该是基于梯度的优化最重要的部分了（但是对使用者并不需要严格掌握，大部分时间几乎不需要知道，但深入底层其实往往会自己autograd函数），大部分深度学习库的底层都是一个个计算图；对于高阶和高维的y和x，求导的结果可以是一个高阶张量；控制流的梯度计算允许梯度在各种结构中被计算</p>
+<li><p>5.自动微分：这应该是基于梯度的优化最重要的部分了（但是对使用者并不需要严格掌握，大部分时间几乎不需要知道，但深入底层其实往往会自己autograd函数），大部分深度学习库的底层都是一个个计算图；对于高阶和高维的y和x，求导的结果可以是一个高阶张量；控制流的梯度计算允许梯度在各种结构中被计算</p>
 </li>
-<li><p>概率：真神降临！——概率是更古典的数学美学。概率将不确定的事情进行了确定的描述，概率和人性有一种关联，概率可以通往哲学。随机变量，最基础的概念，但实际上很容易搞错；贝叶斯定理，统计学中最有用的方程之一；边际概率；期望、（协）方差（也非常重要的概念）</p>
+<li><p>6.概率：真神降临！——概率是更古典的数学美学。概率将不确定的事情进行了确定的描述，概率和人性有一种关联，概率可以通往哲学。随机变量，最基础的概念，但实际上很容易搞错；贝叶斯定理，统计学中最有用的方程之一；边际概率；期望、（协）方差（也非常重要的概念）</p>
 </li>
 </ol>
-
+<h1 id="三、线性神经网络-2024-7-16更"><a href="#三、线性神经网络-2024-7-16更" class="headerlink" title="三、线性神经网络 (2024&#x2F;7&#x2F;16更)"></a>三、线性神经网络 (2024&#x2F;7&#x2F;16更)</h1><p><strong>在介绍深度神经网络之前，我们需要了解神经网络训练的基础知识。 本章我们将介绍神经网络的整个训练过程， 包括：定义简单的神经网络架构、数据处理、指定损失函数和如何训练模型。 为了更容易学习，我们将从经典算法————线性神经网络开始，介绍神经网络的基础知识。 经典统计学习技术中的线性回归和softmax回归可以视为线性神经网络， 这些知识将为其他部分中更复杂的技术奠定基础。</strong></p>
+<ol>
+<li>1.线性回归：线性模型y&#x3D;Xw+b;损失函数；解析解（简单的模型可以有解析解了，复杂的深度学习模型很难有解析解）；随机梯度下降；预测&#x2F;推断；矢量化运算；正态分布与平方损失——这部分建议深入思考学习（在高斯噪声的假设下，最小化均方误差等价于对线性模型的极大似然估计）（插一嘴极大似然，哲学的理解就是冥冥之中自有定数，既然发生了，那一定是有因果可循，一定是最有可能如此才会被观察到）；从线性回归到深度网络。</li>
+</ol>
+<ul>
+<li>小结：机器学习模型中的关键要素是训练数据、损失函数、优化算法，还有模型本身。矢量化使数学表达上更简洁，同时运行的更快。最小化目标函数和执行极大似然估计等价。线性回归模型也是一个简单的神经网络。</li>
+</ul>
+<ol start="2">
+<li><p>2.从0开始实现线性回归（回顾入门代码）<br>Examples：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 我们定义一个data_iter函数， 该函数接收批量大小、特征矩阵和标</span><br><span class="line"># 签向量作为输入，生成大小为batch_size的小批量。 </span><br><span class="line"># 每个小批量包含一组特征和标签。</span><br><span class="line">def data_iter(batch_size, features, labels):</span><br><span class="line">    num_examples = len(features)</span><br><span class="line">    indices = list(range(num_examples))</span><br><span class="line">    # 这些样本是随机读取的，没有特定的顺序</span><br><span class="line">    random.shuffle(indices)</span><br><span class="line">    for i in range(0, num_examples, batch_size):</span><br><span class="line">        batch_indices = np.array(</span><br><span class="line">            indices[i: min(i + batch_size, num_examples)])</span><br><span class="line">        yield features[batch_indices], labels[batch_indices]</span><br><span class="line"></span><br><span class="line">batch_size = 10</span><br><span class="line"></span><br><span class="line">for X, y in data_iter(batch_size, features, labels):</span><br><span class="line">    print(X, &#x27;\n&#x27;, y)</span><br><span class="line">    break</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>3.线性回归的深度学习框架实现</p>
+</li>
+<li><p>4.Softmax回归——分类：全连接层的参数开销（具体来说，对于任何具有d个输入和q个输出的全连接层， 参数开销为O(dq)，这个数字在实践中可能高得令人望而却步。幸运的是，将d个输入转换为q个输出的成本可以减少到O(dq&#x2F;n)， 其中超参数n可以由我们灵活指定，以在实际应用中平衡参数节约和模型有效性）；交叉熵与信息论（这部分同样很重要）</p>
+</li>
+<li><p>5.图像数据集——MNIST&#x2F;F-MNIST</p>
+</li>
+<li><p>6.Softmax回归从0实现</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">def softmax(X):</span><br><span class="line">    X_exp = torch.exp(X)</span><br><span class="line">    partition = X_exp.sum(1, keepdim=True)</span><br><span class="line">    return X_exp / partition  # 这里应用了广播机制</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>7.Softmax回归简洁实现</p>
+</li>
+</ol>
+<h1 id="四、多层感知机"><a href="#四、多层感知机" class="headerlink" title="四、多层感知机"></a>四、多层感知机</h1><p><strong>深度学习的基本模型</strong></p>
+<ol>
+<li><p>1.MLP：从单层到多层；从线性到非线性；通用近似；激活函数；</p>
+</li>
+<li><p>2.从0开始MLP （我觉得教程这个也不算从0开始，依然用库简化了很多步骤，真男人要从梯度开始手撕）</p>
+</li>
+<li><p>3.简洁实现MLP（。。。）</p>
+</li>
+<li><p>4.模型选择，欠拟合与过拟合</p>
+</li>
+</ol>
+<ul>
+<li>4.1.将模型在训练数据上拟合的比在潜在分布中更接近的现象称为过拟合（overfitting）， 用于对抗过拟合的技术称为正则化（regularization）。训练误差与泛化误差</li>
+<li>4.2.i.i.d. 与 VC理论</li>
+<li>4.3.模型选择，验证集（k-fold），欠拟合or过拟合？</li>
+<li>4.4.模型复杂性-损失 关系图</li>
+<li>4.5.数据集</li>
+</ul>
+<ol start="5">
+<li><p>5.权重衰减(weight decay): </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># L(w,b)+λ/2*L2</span><br><span class="line">def l2_penalty(w):</span><br><span class="line">    return (w**2).sum() / 2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>6.Dropout: 扰动的稳健性</p>
+</li>
+<li><p>7.前向传播，反向传播与计算图 （这部分的推导可以看看，但不够详细）；在训练期间需要额外存储计算图中元素的梯度，导致额外的内存开销</p>
+</li>
+<li><p>8.数值稳定性与模型初始化<br><strong>初始化方案的选择在神经网络学习中起着举足轻重的作用， 它对保持数值稳定性至关重要。 此外，这些初始化方案的选择可以与非线性激活函数的选择有趣的结合在一起。 我们选择哪个函数以及如何初始化参数可以决定优化算法收敛的速度有多快。 糟糕选择可能会导致我们在训练时遇到梯度爆炸或梯度消失。</strong></p>
+</li>
+</ol>
+<ul>
+<li>*梯度消失和梯度爆炸：不稳定梯度带来的风险不止在于数值表示； 不稳定梯度也威胁到我们优化算法的稳定性。 我们可能面临一些问题。 要么是梯度爆炸（gradient exploding）问题： 参数更新过大，破坏了模型的稳定收敛； 要么是梯度消失（gradient vanishing）问题： 参数更新过小，在每次更新时几乎不会移动，导致模型无法学习。</li>
+<li>*Sigmoid梯度消失</li>
+<li>*打破对称性：对称的参数更新时也依然对称；随机初始化</li>
+<li>*Xavier初始化 1&#x2F;2(nin+nout)σ2&#x3D;1</li>
+<li>*…其他巧妙初始化方法也被广泛研究</li>
+</ul>
+<ol start="9">
+<li>9.环境和分布偏移 （非常容易被忽略，非常致命）<br><strong>许多失败的机器学习部署（即实际应用）都可以追究到这种方式——我们从来没有想过数据最初从哪里来？以及我们计划最终如何处理模型的输出？ 通常情况下，开发人员会拥有一些数据且急于开发模型，而不关注这些基本问题。 有时，根据测试集的精度衡量，模型表现得非常出色。 但是当数据分布突然改变时，模型在部署中会出现灾难性的失败。 更隐蔽的是，有时模型的部署本身就是扰乱数据分布的催化剂。</strong></li>
+</ol>
+<ul>
+<li>*分布偏移的类型：协变量（特征）偏移；标签偏移；概念偏移；</li>
+<li>*分布偏移实例</li>
+<li>*纠正分布偏移：协变量偏移纠正（加权）；标签偏移纠正（线性补偿）；概念偏移纠正（类似迁移学习）</li>
+<li>*批量学习；在线学习；老虎机；强化学习——上述不同情况之间的一个关键区别是：在静止环境中可能一直有效的相同策略， 在环境能够改变的情况下可能不会始终有效。</li>
+<li>*最后，重要的是，当我们部署机器学习系统时， 不仅仅是在优化一个预测模型， 而通常是在提供一个会被用来（部分或完全）进行自动化决策的工具。 这些技术系统可能会通过其进行的决定而影响到每个人的生活。</li>
+</ul>
+<ol start="10">
+<li>10.<a target="_blank" rel="noopener" href="https://www.kaggle.com/c/house-prices-advanced-regression-techniques">Kaggle实战</a></li>
+</ol>
+<ul>
+<li>小结：真实数据通常混合了不同的数据类型，需要进行预处理。常用的预处理方法：将实值数据重新缩放为零均值和单位方法；用均值替换缺失值。将类别特征转化为指标特征，可以使我们把这个特征当作一个独热向量来对待。我们可以使用k折交叉验证来选择模型并调整超参数。对数对于相对误差很有用。</li>
+</ul>
+<h1 id="五、深度学习"><a href="#五、深度学习" class="headerlink" title="五、深度学习"></a>五、深度学习</h1>
             </div>
 
             <!-- Post Comments -->
