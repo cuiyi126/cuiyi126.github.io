@@ -98,7 +98,7 @@
 	            <a href="#s1">Archive</a>
 	                    <ul class="submenu">
 	                        <li>
-	                        <a class="archive-link" href="/archives/2024/07/">July 2024</a></li><li><a class="archive-link" href="/archives/2024/04/">April 2024</a></li><li><a class="archive-link" href="/archives/2023/09/">September 2023</a>
+	                        <a class="archive-link" href="/archives/2024/09/">September 2024</a></li><li><a class="archive-link" href="/archives/2024/07/">July 2024</a></li><li><a class="archive-link" href="/archives/2024/04/">April 2024</a></li><li><a class="archive-link" href="/archives/2023/09/">September 2023</a>
 	                    </ul>
 	        </li>
 	        
@@ -254,7 +254,58 @@
 <ul>
 <li>小结：真实数据通常混合了不同的数据类型，需要进行预处理。常用的预处理方法：将实值数据重新缩放为零均值和单位方法；用均值替换缺失值。将类别特征转化为指标特征，可以使我们把这个特征当作一个独热向量来对待。我们可以使用k折交叉验证来选择模型并调整超参数。对数对于相对误差很有用。</li>
 </ul>
-<h1 id="五、深度学习"><a href="#五、深度学习" class="headerlink" title="五、深度学习"></a>五、深度学习</h1>
+<h1 id="五、深度学习-（2024-9-22更）"><a href="#五、深度学习-（2024-9-22更）" class="headerlink" title="五、深度学习 （2024&#x2F;9&#x2F;22更）"></a>五、深度学习 （2024&#x2F;9&#x2F;22更）</h1><p><strong>在本章中，我们将深入探索深度学习计算的关键组件， 即模型构建、参数访问与初始化、设计自定义层和块、将模型读写到磁盘， 以及利用GPU实现显著的加速</strong></p>
+<ol>
+<li>1.层和块</li>
+</ol>
+<ul>
+<li>*事实证明，研究讨论“比单个层大”但“比整个模型小”的组件更有价值。 例如，在计算机视觉中广泛流行的ResNet-152架构就有数百层， 这些层是由层组（groups of layers）的重复模式组成。</li>
+<li>*自定义块<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class MLP(nn.Module):</span><br><span class="line">    # 用模型参数声明层。这里，我们声明两个全连接的层</span><br><span class="line">    def __init__(self):</span><br><span class="line">        # 调用MLP的父类Module的构造函数来执行必要的初始化。</span><br><span class="line">        # 这样，在类实例化时也可以指定其他函数参数，例如模型参数params（稍后将介绍）</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.hidden = nn.Linear(20, 256)  # 隐藏层</span><br><span class="line">        self.out = nn.Linear(256, 10)  # 输出层</span><br><span class="line"></span><br><span class="line">    # 定义模型的前向传播，即如何根据输入X返回所需的模型输出</span><br><span class="line">    def forward(self, X):</span><br><span class="line">        # 注意，这里我们使用ReLU的函数版本，其在nn.functional模块中定义。</span><br><span class="line">        return self.out(F.relu(self.hidden(X)))</span><br></pre></td></tr></table></figure></li>
+<li>顺序块、嵌套模块<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class NestMLP(nn.Module):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.net = nn.Sequential(nn.Linear(20, 64), nn.ReLU(),</span><br><span class="line">                                 nn.Linear(64, 32), nn.ReLU())</span><br><span class="line">        self.linear = nn.Linear(32, 16)</span><br><span class="line"></span><br><span class="line">    def forward(self, X):</span><br><span class="line">        return self.linear(self.net(X))</span><br><span class="line"></span><br><span class="line">chimera = nn.Sequential(NestMLP(), nn.Linear(16, 20), FixedHiddenMLP())</span><br><span class="line">chimera(X)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol start="2">
+<li>2.参数管理</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">print(net[1].params) # 层参数概要</span><br><span class="line">print(type(net[1].bias)) </span><br><span class="line">print(net[1].bias)</span><br><span class="line">print(net[1].bias.data())</span><br><span class="line">net[1].weight.grad() #访问参数梯度</span><br><span class="line"></span><br><span class="line">print(net[0].collect_params()) #访问所有参数</span><br><span class="line">print(net.collect_params())</span><br></pre></td></tr></table></figure>
+<ul>
+<li>*嵌套块的参数访问</li>
+<li>*参数初始化：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"># 内置初始化</span><br><span class="line">def init_normal(m):</span><br><span class="line">    if type(m) == nn.Linear:</span><br><span class="line">        nn.init.normal_(m.weight, mean=0, std=0.01)</span><br><span class="line">        nn.init.zeros_(m.bias)</span><br><span class="line">net.apply(init_normal)</span><br><span class="line">net[0].weight.data[0], net[0].bias.data[0]</span><br><span class="line"></span><br><span class="line"># 常数/自定义初始化</span><br><span class="line">def init_constant(m):</span><br><span class="line">    if type(m) == nn.Linear:</span><br><span class="line">        nn.init.constant_(m.weight, 1)</span><br><span class="line">        nn.init.zeros_(m.bias)</span><br><span class="line">net.apply(init_constant)</span><br><span class="line">net[0].weight.data[0], net[0].bias.data[0]</span><br><span class="line"></span><br><span class="line">def my_init(m):</span><br><span class="line">    if type(m) == nn.Linear:</span><br><span class="line">        print(&quot;Init&quot;, *[(name, param.shape)</span><br><span class="line">                        for name, param in m.named_parameters()][0])</span><br><span class="line">        nn.init.uniform_(m.weight, -10, 10)</span><br><span class="line">        m.weight.data *= m.weight.data.abs() &gt;= 5</span><br><span class="line">net.apply(my_init)</span><br><span class="line">net[0].weight[:2]</span><br><span class="line"></span><br><span class="line"># 分层初始化</span><br><span class="line">def init_xavier(m):</span><br><span class="line">    if type(m) == nn.Linear:</span><br><span class="line">        nn.init.xavier_uniform_(m.weight)</span><br><span class="line">def init_42(m):</span><br><span class="line">    if type(m) == nn.Linear:</span><br><span class="line">        nn.init.constant_(m.weight, 42)</span><br><span class="line">net[0].apply(init_xavier)</span><br><span class="line">net[2].apply(init_42)</span><br></pre></td></tr></table></figure></li>
+<li>*参数绑定&#x2F;共享：有时我们希望在多个层间共享参数： 我们可以定义一个稠密层，然后使用它的参数来设置另一个层的参数。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># 我们需要给共享层一个名称，以便可以引用它的参数</span><br><span class="line">shared = nn.Linear(8, 8)</span><br><span class="line">net = nn.Sequential(nn.Linear(4, 8), nn.ReLU(),</span><br><span class="line">                    shared, nn.ReLU(),</span><br><span class="line">                    shared, nn.ReLU(),</span><br><span class="line">                    nn.Linear(8, 1))</span><br><span class="line">net(X)</span><br><span class="line"># 检查参数是否相同</span><br><span class="line">print(net[2].weight.data[0] == net[4].weight.data[0])</span><br><span class="line">net[2].weight.data[0, 0] = 100</span><br><span class="line"># 确保它们实际上是同一个对象，而不只是有相同的值</span><br><span class="line">print(net[2].weight.data[0] == net[4].weight.data[0])</span><br></pre></td></tr></table></figure>
+<p>这个例子表明第三个和第五个神经网络层的参数是绑定的。 它们不仅值相等，而且由相同的张量表示。 因此，如果我们改变其中一个参数，另一个参数也会改变。 这里有一个问题：当参数绑定时，梯度会发生什么情况？ 答案是由于模型参数包含梯度，因此在反向传播期间第二个隐藏层 （即第三个神经网络层）和第三个隐藏层（即第五个神经网络层）的梯度会加在一起。</p>
+<ol start="3">
+<li>3.延后初始化<br><strong>到目前为止，我们忽略了建立网络时需要做的以下这些事情：我们定义了网络架构，但没有指定输入维度。我们添加层时没有指定前一层的输出维度。我们在初始化参数时，甚至没有足够的信息来确定模型应该包含多少参数。这里的诀窍是框架的延后初始化（defers initialization）， 即直到数据第一次通过模型传递时，框架才会动态地推断出每个层的大小。在以后，当使用卷积神经网络时， 由于输入维度（即图像的分辨率）将影响每个后续层的维数， 有了该技术将更加方便。</strong></li>
+</ol>
+<ul>
+<li>*延后初始化使框架能够自动推断参数形状，使修改模型架构变得容易，避免了一些常见的错误。我们可以通过模型传递数据，使框架最终初始化参数</li>
+</ul>
+<ol start="4">
+<li>4.自定义层<br><strong>深度学习成功背后的一个因素是神经网络的灵活性： 我们可以用创造性的方式组合不同的层，从而设计出适用于各种任务的架构。</strong></li>
+</ol>
+<ul>
+<li><p>*不带任何参数的层</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class CenteredLayer(nn.Block):</span><br><span class="line">    def __init__(self, **kwargs):</span><br><span class="line">        super().__init__(**kwargs)</span><br><span class="line"></span><br><span class="line">    def forward(self, X):</span><br><span class="line">        return X - X.mean()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>*带参数的层</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class MyLinear(nn.Module):</span><br><span class="line">    def __init__(self, in_units, units):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.weight = nn.Parameter(torch.randn(in_units, units))</span><br><span class="line">        self.bias = nn.Parameter(torch.randn(units,))</span><br><span class="line">    def forward(self, X):</span><br><span class="line">        linear = torch.matmul(X, self.weight.data) + self.bias.data</span><br><span class="line">        return F.relu(linear)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol start="5">
+<li>5.读写文件<br><strong>到目前为止，我们讨论了如何处理数据， 以及如何构建、训练和测试深度学习模型。 然而，有时我们希望保存训练的模型， 以备将来在各种环境中使用（比如在部署中进行预测）。 此外，当运行一个耗时较长的训练过程时， 最佳的做法是定期保存中间结果， 以确保在服务器电源被不小心断掉时，我们不会损失几天的计算结果。</strong></li>
+</ol>
+<ul>
+<li>*结果你只给了个 torch.save(net.state_dict(), ‘mlp.params’)</li>
+</ul>
+<ol start="6">
+<li>6.GPU</li>
+</ol>
+<ul>
+<li>*简而言之，自2000年以来，GPU性能每十年增长1000倍。</li>
+<li>*如果有多个GPU，我们使用torch.device(f’cuda:{i}’) 来表示第<br>块GPU（从0开始）OS： 贫穷限制了我的想象</li>
+<li>*有几种方法可以在GPU上存储张量。 例如，我们可以在创建张量时指定存储设备。接 下来，我们在第一个gpu上创建张量变量X。 在GPU上创建的张量只消耗这个GPU的显存。 我们可以使用nvidia-smi命令查看显存使用情况。 一般来说，我们需要确保不创建超过GPU显存限制的数据。</li>
+<li>*复制，X(GPU0) +Y(GPU1)将导致错误，需复制Z&#x3D;X(GPU1),使用Z+Y</li>
+</ul>
+<h1 id="六、-卷积神经网络"><a href="#六、-卷积神经网络" class="headerlink" title="六、 卷积神经网络"></a>六、 卷积神经网络</h1>
             </div>
 
             <!-- Post Comments -->
